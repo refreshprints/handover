@@ -1196,9 +1196,27 @@ html body .monthnav [data-a=homon][data-id="0"].isnow,html body .fctoday.isnow{b
   .exbar>button{white-space:nowrap;flex:none}}
 @media (min-width:400px){#main>.spanbar{margin-left:auto;margin-right:auto}}
 @media (max-width:999px){#protolab{display:none}}
-@media (min-width:761px) and (max-width:899px){#main .toolbar>.dtools{width:100%}#main .toolbar>.monthnav{margin-left:auto;margin-right:auto}#main .toolbar>.dtools>.subnav.tb{margin-right:auto}}
+@media (min-width:761px) and (max-width:899px){body:not(.lite) #main .toolbar:has(>.dtools>.subnav.tb)>.dtools{width:100%}body:not(.lite) #main .toolbar:has(>.dtools>.subnav.tb)>.monthnav{margin-left:auto;margin-right:auto}#main .toolbar>.dtools>.subnav.tb{margin-right:auto}}
 .dsrow{max-width:none}
-@media (min-width:900px){body[data-tab=availability] #main>.toolbar,body[data-tab=availability] #main>.summary-line,body[data-tab=availability] #main>.avleg{max-width:720px}}
+@media (min-width:900px){
+ body.av2 #main{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;column-gap:24px;align-items:center}
+ body.av2 #main>*{grid-column:1/-1}
+ body.av2 #main>.toolbar,body.av2 #main>.toolbar>.avtools{display:contents}
+ body.av2 .bkhead{grid-column:1/-1;grid-row:1;margin-bottom:14px}
+ body.av2 #avweeks{grid-column:1;grid-row:2;margin:0 16px 12px 0!important}
+ body.av2 #avdays{grid-column:1;grid-row:3;margin:0 16px 12px 0!important}
+ body.av2 .avtools>.btnpair{grid-column:2/4;grid-row:2;margin:0 0 12px!important}
+ body.av2 .avtools>.feerow{grid-column:2;grid-row:3;margin:0 0 12px!important}
+ body.av2 .avtools>.avrange{grid-column:3;grid-row:3;margin:0 0 12px!important;justify-self:end;width:auto}
+ body.av2 .avtools>.avrange .fcdate{flex:none;width:114px;min-width:0}
+ body.av2 .avtools>.avrange .fcdate b{padding:0 14px}
+ body.av2 #main>.avleg{grid-column:1;grid-row:4;margin:22px 0 0!important}
+ body.av2 #main>.summary-line{grid-column:2/4;grid-row:4;margin:22px 0 0!important;justify-self:end;text-align:right}
+ body.av2 .avtools>.avnote{grid-column:1/-1;grid-row:5;margin:12px 0 0!important}
+ body.av2 #main>.weeks{margin-top:16px}
+}
+@media (min-width:761px){#main .keynote.ktop+.legend{justify-content:center}}
+@media (min-width:761px){body[data-tab=clashes] #main .monthnav,body[data-tab=awaitlist] #main .monthnav,body[data-tab=handedlist] #main .monthnav{width:fit-content;margin-left:auto!important;margin-right:auto!important}}
 </style>
 </head>
 <body data-theme="setlist">
@@ -1321,7 +1339,7 @@ function seed(){
     ]
   };
 }
-const APP_VER='v17.5',FEEDBACK_TO='info@refreshprints.co.uk';
+const APP_VER='v18.2',FEEDBACK_TO='info@refreshprints.co.uk';
 const fbHref=()=>'mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent((''+APP_NAME+' ')+APP_VER+' feedback')+'&body='+encodeURIComponent(('What were you trying to do?\n\n\nWhat happened?\n\n\nWhat phone are you using?\n\n\n('+APP_NAME+' ')+APP_VER+')');
 const APP_URL=(()=>{try{if(/^https?:$/.test(location.protocol))return location.origin+location.pathname}catch(e){}return 'https://depdiary.app/'})();
 const b64e=o=>{const u=LZString.compressToUint8Array(JSON.stringify(o));let b='';for(let i=0;i<u.length;i+=4096)b+=String.fromCharCode.apply(null,u.subarray(i,i+4096));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
@@ -1564,6 +1582,7 @@ function render(){if(ui.tab==='settings'&&ui._last&&ui._last!=='settings'&&ui._l
   {const pl=$('#protolab');if(pl)pl.textContent=state.sample?'Test version · sample data':'Test version'}
   $('#main').innerHTML=({diary:vDiary,availability:vAvail,invoices:vInvoices,deps:vDeps,alldeps:vAllDeps,profile:vProfile,help:vHelp,clashes:vClashes,settings:vSettings,awaitlist:vAwaitList,handedlist:vHandedList,fullcal:vFullCal,awaycal:vAwayCal})[ui.tab]();
   requestAnimationFrame(dockPad);
+  document.body.classList.toggle('av2',ui.tab==='availability'&&!isLite()&&!!document.querySelector('#main>.toolbar>.avtools'));
   {const tp=document.querySelector('.top'),old=tp&&tp.querySelector(':scope > .fctop');if(old)old.remove();const f=$('#main .fctop');if(f&&tp)tp.appendChild(f);document.documentElement.classList.toggle('fcmode',!!f);if(f){scrollTo(0,0);fcLayout()}}
   fixDates($('#main'));
   fitMonth();fitPills();
