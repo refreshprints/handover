@@ -1183,6 +1183,7 @@ html body.lite .avmsel{color:#fff;background-color:var(--accent);border-color:va
 .spanpick label{-webkit-tap-highlight-color:transparent}.spanpick>.slidepill{will-change:transform}.subnav>.slidepill,.spanbar>.slidepill{will-change:transform}
 html body .monthnav [data-a=homon][data-id="0"].isnow,html body .fctoday.isnow{background:var(--line)!important;border-color:var(--line)!important;color:var(--muted)!important;cursor:default;filter:none!important}body[data-theme=setlist] .monthnav [data-a=homon][data-id="0"]:hover,.fctoday:not(.isnow):hover{filter:brightness(1.08)}
 #suf .rolepick{flex-wrap:nowrap;gap:6px;margin-top:5px}#suf .rolepick label{flex:1 1 auto;justify-content:center;white-space:nowrap;padding:9px 8px;font-size:13px;gap:0}@media (max-width:370px){#suf .rolepick{gap:4px}#suf .rolepick label{padding:9px 5px;font-size:12px}}
+.gcount{color:var(--accent);font-weight:700}
 </style>
 </head>
 <body data-theme="setlist">
@@ -1305,7 +1306,7 @@ function seed(){
     ]
   };
 }
-const APP_VER='v16.7',FEEDBACK_TO='info@refreshprints.co.uk';
+const APP_VER='v16.9',FEEDBACK_TO='info@refreshprints.co.uk';
 const fbHref=()=>'mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent((''+APP_NAME+' ')+APP_VER+' feedback')+'&body='+encodeURIComponent(('What were you trying to do?\n\n\nWhat happened?\n\n\nWhat phone are you using?\n\n\n('+APP_NAME+' ')+APP_VER+')');
 const APP_URL=(()=>{try{if(/^https?:$/.test(location.protocol))return location.origin+location.pathname}catch(e){}return 'https://depdiary.app/'})();
 const b64e=o=>{const u=LZString.compressToUint8Array(JSON.stringify(o));let b='';for(let i=0;i<u.length;i+=4096)b+=String.fromCharCode.apply(null,u.subarray(i,i+4096));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
@@ -2088,7 +2089,7 @@ function vInvoicesMain(){
   <div class="stats"><div class="stat"><span>To invoice</span><strong>${money(income)}</strong></div><div class="stat"><span>Invoices</span><strong>${invs.length}</strong></div><div class="stat"><span>Handed over</span><strong>${hoCt.length}</strong></div></div>${hoCt.length?`<p class="muted sm" style="margin:-8px 0 16px">Handed-over gigs aren’t on your invoices. The stand-in invoices the booker directly.</p>`:''}`;
   if(!invs.length)h+=`<div class="empty">Nothing to invoice in ${MONTHS[mm-1]} ${yy}.</div>`;
   else h+='<div class="cards">'+invs.map(i=>{const p=i.payee,n=i.lines.filter(l=>!l.pa).length,sent=sentOn(i.num);
-    return `<div class="card"><p class="eyebrow">${esc(p.org||'Client')}</p><h3>${esc(p.name)}</h3><div class="big">${money(i.total)}</div><div class="muted sm">${i.num} · ${n} gig${n>1?'s':''}${i.lines.some(l=>l.note==='Handover pending')?' · includes a pending handover':''}</div>${sent?`<div style="margin-top:6px"><span class="tag">Sent ${sent}</span></div>`:''}<div class="actions"><button class="primary sm" data-a="inv" data-id="${i.pid}">View invoice</button><button class="ghost sm" data-a="invpdf" data-id="${i.pid}">Download PDF</button></div></div>`}).join('')+'</div>';
+    return `<div class="card"><p class="eyebrow">${esc(p.org||'Client')}</p><h3>${esc(p.name)}</h3><div class="big">${money(i.total)}</div><div class="muted sm">${i.num} · <b class="gcount">${n} gig${n>1?'s':''}</b></div>${i.lines.some(l=>l.note==='Handover pending')?'<div class="muted sm">Includes a pending handover</div>':''}${sent?`<div style="margin-top:6px"><span class="tag">Sent ${sent}</span></div>`:''}<div class="actions"><button class="primary sm" data-a="inv" data-id="${i.pid}">View invoice</button><button class="ghost sm" data-a="invpdf" data-id="${i.pid}">Download PDF</button></div></div>`}).join('')+'</div>';
   return h;
 }
 function invView(pid,pv){
