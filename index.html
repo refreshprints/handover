@@ -1187,6 +1187,18 @@ html body .monthnav [data-a=homon][data-id="0"].isnow,html body .fctoday.isnow{b
 @media (min-width:900px){html body .setpage{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 40px;align-items:start}.setpage .verline{grid-column:1/-1}.setpage .setcol2h{margin-top:0!important}}
 .cards>.card:has(.invacts){display:flex;flex-direction:column}.cards .invacts{margin-top:auto!important;padding-top:12px}
 @media (min-width:761px){#main>.spanbar{margin-left:auto;margin-right:auto;margin-bottom:28px}html body #main .chipwrap{grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-columns:none}html body #main .chipwrap>.chiprow{display:contents}html body #main .chipwrap>.chiprow>.stc{grid-column:auto!important}}
+
+/* responsive tidy v17.3 */
+.nicon.nic-d{display:none}
+@media (min-width:761px){.nicon.nic-m{display:none!important}.nicon.nic-d{display:inline-flex;vertical-align:middle;margin:0 2px 0 6px;position:relative;top:-1px}
+  #main .ract{display:flex;flex-wrap:wrap;align-items:center;column-gap:6px;row-gap:4px}#main .ract>.nicon.nic-d{margin:0}
+  html body .subnav.paysub{margin-left:auto;margin-right:auto}
+  .exbar>button{white-space:nowrap;flex:none}}
+@media (min-width:400px){#main>.spanbar{margin-left:auto;margin-right:auto}}
+@media (max-width:999px){#protolab{display:none}}
+@media (min-width:761px) and (max-width:899px){#main .toolbar>.dtools{width:100%}#main .toolbar>.monthnav{margin-left:auto;margin-right:auto}#main .toolbar>.dtools>.subnav.tb{margin-right:auto}}
+.dsrow{max-width:none}
+@media (min-width:900px){body[data-tab=availability] #main>.toolbar,body[data-tab=availability] #main>.summary-line,body[data-tab=availability] #main>.avleg{max-width:720px}}
 </style>
 </head>
 <body data-theme="setlist">
@@ -1309,7 +1321,7 @@ function seed(){
     ]
   };
 }
-const APP_VER='v17.2',FEEDBACK_TO='info@refreshprints.co.uk';
+const APP_VER='v17.5',FEEDBACK_TO='info@refreshprints.co.uk';
 const fbHref=()=>'mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent((''+APP_NAME+' ')+APP_VER+' feedback')+'&body='+encodeURIComponent(('What were you trying to do?\n\n\nWhat happened?\n\n\nWhat phone are you using?\n\n\n('+APP_NAME+' ')+APP_VER+')');
 const APP_URL=(()=>{try{if(/^https?:$/.test(location.protocol))return location.origin+location.pathname}catch(e){}return 'https://depdiary.app/'})();
 const b64e=o=>{const u=LZString.compressToUint8Array(JSON.stringify(o));let b='';for(let i=0;i<u.length;i+=4096)b+=String.fromCharCode.apply(null,u.subarray(i,i+4096));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
@@ -1682,8 +1694,8 @@ function grid(y,mo){
 }
 function rowHTML(g,opt){const d=fromIso(g.date),s=gigState(g),cl=CLASH_STATES.includes(s)&&clashesOn(g.date).some(([a,b])=>a.id===g.id||b.id===g.id);
   return `<button class="row s-${s}" data-a="open" data-id="${g.id}"><div class="dblock"><span>${DAYS[(d.getDay()+6)%7]}</span><strong>${d.getDate()}</strong>${opt==='m'?`<span>${MONTHS[d.getMonth()].slice(0,3)}</span>`:''}</div>
-    <div class="rmain"><div class="ract"><span class="actn">${esc(g.act)}</span> ${cl?'<span class="tag clash">⚠ Clash</span>':''}${tags(g)}</div><div class="rsub">${esc(g.venue)}</div>${g.loadIn||g.start?`<div class="rsub rtime">${[g.loadIn?'Load-in '+g.loadIn:'',g.start?'On '+g.start:''].filter(Boolean).join(' · ')}</div>`:''}</div>
-    <div class="rside"><span class="rpill"><span class="pill s-${s}">${esc(label(s,g))}</span>${g.notes&&String(g.notes).trim()?'<span class="nicon" title="Has notes" aria-label="Has notes"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg></span>':''}</span><span class="fee">${money(s==='handed'?g.handover.depFee:gigTotal(g))}</span></div></button>`}
+    <div class="rmain"><div class="ract"><span class="actn">${esc(g.act)}</span>${g.notes&&String(g.notes).trim()?'<span class="nicon nic-d" title="Has notes" aria-label="Has notes"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg></span>':''} ${cl?'<span class="tag clash">⚠ Clash</span>':''}${tags(g)}</div><div class="rsub">${esc(g.venue)}</div>${g.loadIn||g.start?`<div class="rsub rtime">${[g.loadIn?'Load-in '+g.loadIn:'',g.start?'On '+g.start:''].filter(Boolean).join(' · ')}</div>`:''}</div>
+    <div class="rside"><span class="rpill"><span class="pill s-${s}">${esc(label(s,g))}</span>${g.notes&&String(g.notes).trim()?'<span class="nicon nic-m" title="Has notes" aria-label="Has notes"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg></span>':''}</span><span class="fee">${money(s==='handed'?g.handover.depFee:gigTotal(g))}</span></div></button>`}
 function awayRuns(a,b){const A=(state.profile.away||[]).filter(d=>d>=a&&d<=b&&isAway(d)).sort(),runs=[];A.forEach(d=>{const r=runs[runs.length-1];if(r&&iso(addDays(fromIso(r[1]),1))===d)r[1]=d;else runs.push([d,d])});return runs}
 function awayRowHTML([a,b]){const f=ds=>{const d=fromIso(ds);return DAYS[(d.getDay()+6)%7]+' '+d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)},n=Math.round((fromIso(b)-fromIso(a))/864e5)+1;
   return `<div class="awrow" role="note"><span class="awtag">Unavailable</span><span>${a===b?f(a):f(a)+' to '+f(b)}${n>1?` <span class="muted">(${n} days)</span>`:''}</span></div>`}
@@ -2076,7 +2088,7 @@ function sentOn(num){
   const r=[...state.sent].reverse().find(x=>x.nums.includes(num));
   return r?fromIso(r.at).toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
 }
-function subnav(){return `<div class="subnav acc"><button data-a="invsub" data-id="invoices" class="${ui.invSub!=='payees'?'on':''}">Invoices</button><button data-a="invsub" data-id="payees" class="${ui.invSub==='payees'?'on':''}">Clients</button></div>`}
+function subnav(){return `<div class="subnav acc paysub"><button data-a="invsub" data-id="invoices" class="${ui.invSub!=='payees'?'on':''}">Invoices</button><button data-a="invsub" data-id="payees" class="${ui.invSub==='payees'?'on':''}">Clients</button></div>`}
 function vInvoices(){
   const top='<div class="toolbar"><div><h2>Payments</h2></div></div>';
   if(ui.invSub==='payees')return top+subnav()+vPayees();
