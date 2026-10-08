@@ -1088,6 +1088,9 @@ body[data-tab=fullcal] .top{border-bottom:1px solid var(--line)!important}
 .fcd.today .fcn{background:var(--accent);color:#fff}
 .fcmon span{color:var(--muted);font-weight:600;font-size:18px}
 .fcd{min-width:0;overflow:hidden;min-height:62px!important;align-items:stretch!important;padding:4px 1px 4px!important}.fcd .fcn{align-self:center}
+.fcg>.fcd,.fcg>.fce{box-sizing:border-box;height:72px!important;min-height:0!important;margin:0;-webkit-appearance:none;appearance:none;border:0;border-top:1px solid var(--line);border-radius:0}
+.awc .fcg>.fcd,.awc .fcg>.fce{height:62px!important}
+.fcd.away .fcls i:nth-child(n+2){display:none}
 .fcls{display:flex;flex-direction:column;gap:2px;min-width:0}
 .fcls i{font-style:normal;font-size:10px;line-height:14px;font-weight:600;padding:0 3px;border-radius:4px;background:var(--cb);color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:left;-webkit-mask-image:linear-gradient(90deg,#000 75%,transparent);mask-image:linear-gradient(90deg,#000 75%,transparent)}
 .fcls i.more{-webkit-mask-image:none;mask-image:none}
@@ -1287,7 +1290,7 @@ function seed(){
     ]
   };
 }
-const APP_VER='v14.8',FEEDBACK_TO='info@refreshprints.co.uk';
+const APP_VER='v14.9',FEEDBACK_TO='info@refreshprints.co.uk';
 const fbHref=()=>'mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent((''+APP_NAME+' ')+APP_VER+' feedback')+'&body='+encodeURIComponent(('What were you trying to do?\n\n\nWhat happened?\n\n\nWhat phone are you using?\n\n\n('+APP_NAME+' ')+APP_VER+')');
 const APP_URL=(()=>{try{if(/^https?:$/.test(location.protocol))return location.origin+location.pathname}catch(e){}return 'https://depdiary.app/'})();
 const b64e=o=>{const u=LZString.compressToUint8Array(JSON.stringify(o));let b='';for(let i=0;i<u.length;i+=4096)b+=String.fromCharCode.apply(null,u.subarray(i,i+4096));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
@@ -1599,11 +1602,11 @@ function vAwayCal(){const t=new Date(),today=iso(t),y0=t.getFullYear(),m0=t.getM
   <div class="fcwk">${DAYS.map(d=>`<span>${d.slice(0,1)}</span>`).join('')}</div></div><div class="fcal awc">`;
   for(let k=0;k<=15;k++){const m=new Date(y0,m0+k,1),y=m.getFullYear(),mo=m.getMonth(),off=(m.getDay()+6)%7,nd=new Date(y,mo+1,0).getDate();
     h+=`<section class="fcm" id="fc-${y}-${mo}"><h3>${MONTHS[mo]}${y!==y0?' '+y:''}</h3><div class="fcg">`;
-    for(let i=0;i<off;i++)h+='<span></span>';
+    for(let i=0;i<off;i++)h+='<span class="fce"></span>';
     for(let d=1;d<=nd;d++){const ds=iso(new Date(y,mo,d)),gs=by[ds]||[],st=gs.length?myDay(ds):'';
       if(ds<today){h+=`<span class="fcd fcx"><span class="fcn">${d}</span></span>`;continue}
       h+=`<button class="fcd awd${A.has(ds)?' on':''}${ds===today?' today':''}" data-a="awtog" data-id="${ds}" aria-pressed="${A.has(ds)}" aria-label="${fmtDate(ds)}${gs.length?', '+gs.length+' gig'+(gs.length>1?'s':''):''}"><span class="fcn">${d}</span>${gs.length?`<span class="awg s-${gigState(gs[0])}">${gs.length>1?gs.length+' gigs':esc(gs[0].act||'Gig')}</span>`:''}</button>`}
-    h+='</div></section>'}
+    for(let i=(7-(off+nd)%7)%7;i>0;i--)h+='<span class="fce"></span>';h+='</div></section>'}
   return h+'</div><p class="muted sm awfoot">Unavailable days show in grey on Bookings, your shared availability and your Diary calendar. Days you have a booked gig still show as booked.</p>'}
 function awBtns(){const t=iso(new Date()),n=(state.profile.away||[]).filter(d=>d>=t).length;if(ui.awBase!=null&&[...(state.profile.away||[])].sort().join()===ui.awBase)ui.awHist=[];const u=(ui.awHist||[]).length;
   return `<span id="awbtns" class="awbtns"><button type="button" class="ghost sm awundo${u?' awact':''}" data-a="awundo"${u?'':' disabled'} aria-label="Undo" title="Undo last change"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button><button type="button" class="ghost sm" data-a="awclear"${n?'':' disabled'}>Clear</button></span>`}
@@ -1616,11 +1619,11 @@ function vFullCal(){const t=new Date(),today=iso(t),y0=t.getFullYear(),m0=t.getM
   let h=`<div class="fctop"><div class="fchead"><button class="backbtn" data-a="tab" data-id="diary" aria-label="Back to diary" title="Back to diary"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M15 5l-7 7 7 7"/></svg></button><h2 class="fcmon">${MONTHS[rng?f0.getMonth():m0]} <span>${rng?f0.getFullYear():y0}</span></h2><button class="ghost sm fctoday" data-a="fctoday">Today</button></div><div class="fcrange${rng?' on':''}"><button type="button" class="fcdate${rf?' set':''}" data-a="fcpick" data-id="from" aria-label="From date"><b>${rf?fcFmt(rf):'From'}</b></button><span>to</span><button type="button" class="fcdate${rt?' set':''}" data-a="fcpick" data-id="to" aria-label="To date"><b>${rt?fcFmt(rt):'To'}</b></button><button type="button" class="ghost sm fcclear" data-a="fcclear"${rf||rt||ui.fcA||ui.fcB?'':' disabled'}>Clear</button></div><div class="fcwk">${DAYS.map(d=>`<span>${d.slice(0,1)}</span>`).join('')}</div></div><div class="fcal">`;
   for(let k=0;k<=nM;k++){const m=new Date(from.getFullYear(),from.getMonth()+k,1),y=m.getFullYear(),mo=m.getMonth(),off=(m.getDay()+6)%7,n=new Date(y,mo+1,0).getDate();
     h+=`<section class="fcm" id="fc-${y}-${mo}"><h3>${MONTHS[mo]}${y!==y0?' '+y:''}</h3><div class="fcg">`;
-    for(let i=0;i<off;i++)h+='<span></span>';
+    for(let i=0;i<off;i++)h+='<span class="fce"></span>';
     for(let d=1;d<=n;d++){const ds=iso(new Date(y,mo,d)),gs=by[ds]||[];
       if(rng&&(ds<rf||ds>rt)){h+=`<span class="fcd fcx"><span class="fcn">${d}</span></span>`;continue}
       h+=`<button class="fcd${ds===today?' today':''}${ds<today?' past':''}${ds>=today&&isAway(ds)?' away':''}" data-a="fcday" data-id="${ds}" aria-label="${fmtDate(ds)}${gs.length?', '+gs.length+' gig'+(gs.length>1?'s':''):''}"><span class="fcn">${d}</span>${gs.length?`<span class="fcls">${gs.slice(0,gs.length>2?1:2).map(g=>`<i class="s-${gigState(g)}">${esc(g.act||'Gig')}</i>`).join('')}${gs.length>2?`<i class="more">+${gs.length-1}</i>`:''}</span>`:''}</button>`}
-    h+='</div></section>'}
+    for(let i=(7-(off+n)%7)%7;i>0;i--)h+='<span class="fce"></span>';h+='</div></section>'}
   return h+'</div>'}
 function avPopClose(){document.querySelectorAll('.avpop').forEach(x=>x.remove());document.querySelectorAll('.avsel').forEach(x=>x.classList.remove('avsel'))}
 document.addEventListener('pointerdown',e=>{if(!e.target.closest('.avpop,[data-a=avday]'))avPopClose()},true);
