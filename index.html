@@ -1184,6 +1184,9 @@ html body.lite .avmsel{color:#fff;background-color:var(--accent);border-color:va
 html body .monthnav [data-a=homon][data-id="0"].isnow,html body .fctoday.isnow{background:var(--line)!important;border-color:var(--line)!important;color:var(--muted)!important;cursor:default;filter:none!important}body[data-theme=setlist] .monthnav [data-a=homon][data-id="0"]:hover,.fctoday:not(.isnow):hover{filter:brightness(1.08)}
 #suf .rolepick{flex-wrap:nowrap;gap:6px;margin-top:5px}#suf .rolepick label{flex:1 1 auto;justify-content:center;white-space:nowrap;padding:9px 8px;font-size:13px;gap:0}@media (max-width:370px){#suf .rolepick{gap:4px}#suf .rolepick label{padding:9px 5px;font-size:12px}}
 .gcount{color:var(--accent);font-weight:700}
+@media (min-width:900px){html body .setpage{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 40px;align-items:start}.setpage .verline{grid-column:1/-1}.setpage .setcol2h{margin-top:0!important}}
+.cards>.card:has(.invacts){display:flex;flex-direction:column}.cards .invacts{margin-top:auto!important;padding-top:12px}
+@media (min-width:761px){#main>.spanbar{margin-left:auto;margin-right:auto;margin-bottom:28px}html body #main .chipwrap{grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);grid-template-columns:none}html body #main .chipwrap>.chiprow{display:contents}html body #main .chipwrap>.chiprow>.stc{grid-column:auto!important}}
 </style>
 </head>
 <body data-theme="setlist">
@@ -1306,7 +1309,7 @@ function seed(){
     ]
   };
 }
-const APP_VER='v16.9',FEEDBACK_TO='info@refreshprints.co.uk';
+const APP_VER='v17.2',FEEDBACK_TO='info@refreshprints.co.uk';
 const fbHref=()=>'mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent((''+APP_NAME+' ')+APP_VER+' feedback')+'&body='+encodeURIComponent(('What were you trying to do?\n\n\nWhat happened?\n\n\nWhat phone are you using?\n\n\n('+APP_NAME+' ')+APP_VER+')');
 const APP_URL=(()=>{try{if(/^https?:$/.test(location.protocol))return location.origin+location.pathname}catch(e){}return 'https://depdiary.app/'})();
 const b64e=o=>{const u=LZString.compressToUint8Array(JSON.stringify(o));let b='';for(let i=0;i<u.length;i+=4096)b+=String.fromCharCode.apply(null,u.subarray(i,i+4096));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
@@ -2089,7 +2092,7 @@ function vInvoicesMain(){
   <div class="stats"><div class="stat"><span>To invoice</span><strong>${money(income)}</strong></div><div class="stat"><span>Invoices</span><strong>${invs.length}</strong></div><div class="stat"><span>Handed over</span><strong>${hoCt.length}</strong></div></div>${hoCt.length?`<p class="muted sm" style="margin:-8px 0 16px">Handed-over gigs aren’t on your invoices. The stand-in invoices the booker directly.</p>`:''}`;
   if(!invs.length)h+=`<div class="empty">Nothing to invoice in ${MONTHS[mm-1]} ${yy}.</div>`;
   else h+='<div class="cards">'+invs.map(i=>{const p=i.payee,n=i.lines.filter(l=>!l.pa).length,sent=sentOn(i.num);
-    return `<div class="card"><p class="eyebrow">${esc(p.org||'Client')}</p><h3>${esc(p.name)}</h3><div class="big">${money(i.total)}</div><div class="muted sm">${i.num} · <b class="gcount">${n} gig${n>1?'s':''}</b></div>${i.lines.some(l=>l.note==='Handover pending')?'<div class="muted sm">Includes a pending handover</div>':''}${sent?`<div style="margin-top:6px"><span class="tag">Sent ${sent}</span></div>`:''}<div class="actions"><button class="primary sm" data-a="inv" data-id="${i.pid}">View invoice</button><button class="ghost sm" data-a="invpdf" data-id="${i.pid}">Download PDF</button></div></div>`}).join('')+'</div>';
+    return `<div class="card"><p class="eyebrow">${esc(p.org||'Client')}</p><h3>${esc(p.name)}</h3><div class="big">${money(i.total)}</div><div class="muted sm">${i.num} · <b class="gcount">${n} gig${n>1?'s':''}</b></div>${i.lines.some(l=>l.note==='Handover pending')?'<div class="muted sm">Includes a pending handover</div>':''}${sent?`<div style="margin-top:6px"><span class="tag">Sent ${sent}</span></div>`:''}<div class="actions invacts"><button class="primary sm" data-a="inv" data-id="${i.pid}">View invoice</button><button class="ghost sm" data-a="invpdf" data-id="${i.pid}">Download PDF</button></div></div>`}).join('')+'</div>';
   return h;
 }
 function invView(pid,pv){
@@ -2685,7 +2688,7 @@ function applyReply(d){const g=state.gigs.find(x=>x.handover&&x.handover.token==
   A[d.y?'accept':'decline']({dataset:{i:String(i)}},g.id);save()}
 const BSTYLES=[['ub','Universal icons, icon and word','Edit, delete, close, back, share and help as icons. Other buttons show an icon and a word.'],['uw','Universal icons, words','Edit, delete, close, back, share and help as icons. Other buttons show words only.'],['both','Icon and word','Every button shows an icon and a word.'],['icons','Icons only','Every button shows an icon only.'],['words','Words only','No icons on buttons.']];
 function settingsBody(){const cur=(state.settings&&state.settings.btnStyle)||'ub',acc=(state.settings&&state.settings.accent)||'violet';
-  return `
+  return `<div class="setcol">
   <label class="darkrow"><span>All features<small>Adds payments and invoices, calendar view, custom date ranges, distances to your team, repeats, deposits, equipment, extra acts and more.</small></span><span class="switch"><input type="checkbox" data-c="litemode" ${isLite()?'':'checked'} aria-label="All features"><span></span></span></label>
   <p class="eyebrow" style="margin:16px 0 8px">Diary list</p>
   <div class="spanpick" role="radiogroup" aria-label="Diary list shows">${[['day','Daily'],['week','Weekly'],['month','Monthly']].map(([k,l])=>`<label><input type="radio" name="lspan" value="${k}" data-c="listspan" ${listSpan()===k?'checked':''}><span>${l}</span></label>`).join('')}</div>
@@ -2693,10 +2696,12 @@ function settingsBody(){const cur=(state.settings&&state.settings.btnStyle)||'ub
   <label class="darkrow"><span>Dark mode<small>Easier on the eyes at late gigs.</small></span><span class="switch"><input type="checkbox" data-c="darkmode" ${state.settings&&state.settings.dark?'checked':''} aria-label="Dark mode"><span></span></span></label>
   <div class="accpick" role="radiogroup" aria-label="Accent colour" style="margin-top:10px"><label><input type="radio" name="accent" value="violet" data-c="accent" ${acc==='violet'?'checked':''}><i style="background:#5b3df5"></i>Violet</label><label><input type="radio" name="accent" value="fuchsia" data-c="accent" ${acc==='fuchsia'?'checked':''}><i style="background:#b4239a"></i>Fuchsia</label><label><input type="radio" name="accent" value="teal" data-c="accent" ${acc==='teal'?'checked':''}><i style="background:#0893a3"></i>Turquoise</label><label><input type="radio" name="accent" value="graphite" data-c="accent" ${acc==='graphite'?'checked':''}><i style="background:#2b303b"></i>Graphite</label><label><input type="radio" name="accent" value="cvd" data-c="accent" ${acc==='cvd'?'checked':''}><i class="cvdsw"></i>Colour-blind safe</label></div>
   <p class="muted sm" style="margin:0">Green, amber, red and blue are kept for booked, pencilled, warnings and stand-in gigs.</p>
-  <p class="eyebrow" style="margin:16px 0 8px">Button style</p>
+  </div><div class="setcol">
+  <p class="eyebrow setcol2h" style="margin:16px 0 8px">Button style</p>
   <div class="stylepick">${BSTYLES.map(([k,l,d])=>`<label><input type="radio" name="bstyle" value="${k}" data-c="bstyle" ${k===cur?'checked':''}><span>${l}${k==='ub'?' (default)':''}</span></label>`).join('')}</div>
   ${dataSection()}
   <div class="fbbox"><p><b>Testing ${APP_NAME}?</b><span class="muted sm">Tell us what works and what doesn’t.</span></p><a class="ghost" style="text-decoration:none" href="${fbHref()}">Send feedback</a></div>
+  </div>
   <p class="muted sm verline">${APP_NAME} ${APP_VER} · Test version</p>`}
 function vSettings(){return `<div class="toolbar"><div class="phwrap"><div class="pagehead setbar"><button class="backbtn" data-a="setback" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M15 5l-7 7 7 7"/></svg></button><h2>Settings</h2><button class="backbtn" data-a="help" data-sec="h-data" aria-label="Help with settings" title="Help"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></svg></button></div></div></div><div class="setpage">${settingsBody()}</div>`}
 function openSettings(){closeModal();ui.tab='settings';render();scrollTo(0,0)}
