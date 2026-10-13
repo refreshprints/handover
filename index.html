@@ -1397,7 +1397,7 @@ function seed(){
     ]
   };
 }
-const APP_VER='v22.2',FEEDBACK_TO='info@refreshprints.co.uk';
+const APP_VER='v22.3',FEEDBACK_TO='info@refreshprints.co.uk';
 const fbHref=()=>'mailto:'+FEEDBACK_TO+'?subject='+encodeURIComponent((''+APP_NAME+' ')+APP_VER+' feedback')+'&body='+encodeURIComponent(('What were you trying to do?\n\n\nWhat happened?\n\n\nWhat phone are you using?\n\n\n('+APP_NAME+' ')+APP_VER+')');
 const APP_URL=(()=>{try{if(/^https?:$/.test(location.protocol))return location.origin+location.pathname}catch(e){}return 'https://depdiary.app/'})();
 const b64e=o=>{const u=LZString.compressToUint8Array(JSON.stringify(o));let b='';for(let i=0;i<u.length;i+=4096)b+=String.fromCharCode.apply(null,u.subarray(i,i+4096));return btoa(b).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
@@ -1792,7 +1792,7 @@ function list(y,mo){
   const a0=iso(new Date(y,mo,1)),b0=iso(new Date(y,mo+1,0)),td=iso(new Date()),past=gs.filter(g=>g.date<td);
   if(!past.length)return '<div class="list">'+withAway(gs,a0,b0)+'</div>';
   const up=gs.filter(g=>g.date>=td),op=!!ui.archOpen;
-  const arch=`<button type="button" class="archrow${op?' open':''}" data-a="arch" aria-expanded="${op}"><span class="archic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${op?'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>':'<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.6 6.6C3.9 8.4 2 12 2 12s4 7 10 7c1.8 0 3.4-.5 4.8-1.3M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'}</svg></span><span class="archl">Completed gigs</span><span class="archn">${past.length}</span><svg class="archchev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`;
+  const arch=`<button type="button" class="archrow${op?' open':''}" data-a="arch" aria-expanded="${op}"><span class="archic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${op?'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>':'<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 3.9M6.6 6.6C3.9 8.4 2 12 2 12s4 7 10 7c1.8 0 3.4-.5 4.8-1.3M9.9 9.9a3 3 0 0 0 4.2 4.2"/>'}</svg></span><span class="archl">Completed gigs</span>${op?'':`<span class="archn">${past.length}</span>`}<svg class="archchev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`;
   if(op)return '<div class="list">'+arch+withAway(gs,a0,b0)+'</div>';
   return '<div class="list">'+arch+(up.length?withAway(up,td>a0?td:a0,b0):'<p class="muted sm" style="text-align:center;margin:6px 0 0">No more gigs in '+MONTHS[mo]+'.</p>')+'</div>';
 }
